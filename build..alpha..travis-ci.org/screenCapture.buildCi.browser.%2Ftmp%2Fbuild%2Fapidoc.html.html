@@ -1,0 +1,273 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a>windows-service (v1.1.0)</a>
+</h1>
+<h4>Run Node.JS programs as native Windows Services.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.windows-service">module windows-service</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.windows-service.add">
+            function <span class="apidocSignatureSpan">windows-service.</span>add
+            <span class="apidocSignatureSpan">(name, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.windows-service.remove">
+            function <span class="apidocSignatureSpan">windows-service.</span>remove
+            <span class="apidocSignatureSpan">(name)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.windows-service.run">
+            function <span class="apidocSignatureSpan">windows-service.</span>run
+            <span class="apidocSignatureSpan">(stdoutLogStream, stderrLogStream, stopCallback)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.windows-service.stop">
+            function <span class="apidocSignatureSpan">windows-service.</span>stop
+            <span class="apidocSignatureSpan">(rcode)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.windows-service" id="apidoc.module.windows-service">module windows-service</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.windows-service.add" id="apidoc.element.windows-service.add">
+        function <span class="apidocSignatureSpan">windows-service.</span>add
+        <span class="apidocSignatureSpan">(name, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function add(name, options) {
+	var serviceArgs = [];
+
+	var displayName = (options &amp;&amp; options.displayName)
+			? options.displayName
+			: name;
+
+	var nodePath = (options &amp;&amp; options.nodePath)
+			? options.nodePath
+			: process.execPath;
+
+	var programPath = (options &amp;&amp; options.programPath)
+			? options.programPath
+			: process.argv[1];
+	
+	serviceArgs.push (nodePath);
+
+	if (options &amp;&amp; options.nodeArgs)
+		for (var i = 0; i &lt; options.nodeArgs.length; i++)
+			serviceArgs.push (options.nodeArgs[i]);
+
+	serviceArgs.push (programPath);
+	
+	if (options &amp;&amp; options.programArgs)
+		for (var i = 0; i &lt; options.programArgs.length; i++)
+			serviceArgs.push (options.programArgs[i]);
+	
+	for (var i = 0; i &lt; serviceArgs.length; i++)
+		serviceArgs[i] = "\"" + serviceArgs[i] + "\"";
+	
+	var servicePath = serviceArgs.join (" ");
+	
+	getServiceWrap ().add (name, displayName, servicePath);
+	
+	return this;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+        // Run service program code...
+    } else {
+        // Show usage...
+    }
+
+Note the `--run` argument passed in the `options` parameter to the
+`service.<span class="apidocCodeKeywordSpan">add</span>()` function.  When the service is started using the Windows
+Service Control Manager the first argument to the program will be `--run`.
+The above program checks for this and if specified runs as a service using
+the `service.run()` function.
+
+Also note that neither the node binary or the programs fully qualified path
+are specified.  These parameters are automatically calculated it not
+specified.  Refer to the `service.add()` function description for details
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.windows-service.remove" id="apidoc.element.windows-service.remove">
+        function <span class="apidocSignatureSpan">windows-service.</span>remove
+        <span class="apidocSignatureSpan">(name)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function remove(name) {
+	getServiceWrap ().remove (name);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.windows-service.run" id="apidoc.element.windows-service.run">
+        function <span class="apidocSignatureSpan">windows-service.</span>run
+        <span class="apidocSignatureSpan">(stdoutLogStream, stderrLogStream, stopCallback)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function run(stdoutLogStream, stderrLogStream, stopCallback) {
+	if (! stopCallback) {
+		stopCallback = stderrLogStream;
+		stderrLogStream = stdoutLogStream;
+	}
+
+	if (! runInitialised) {
+		process.__defineGetter__('stdout', function() {
+			return stdoutLogStream;
+		});
+		
+		process.__defineGetter__('stderr', function() {
+			return stderrLogStream;
+		});
+		
+		setInterval (function () {
+			if (isStopRequested ()) {
+				stopCallback ();
+			}
+		}, 2000);
+		
+		runInitialised = true;
+	}
+	
+	getServiceWrap ().run ();
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+        // Show usage...
+    }
+
+Note the `--run` argument passed in the `options` parameter to the
+`service.add()` function.  When the service is started using the Windows
+Service Control Manager the first argument to the program will be `--run`.
+The above program checks for this and if specified runs as a service using
+the `service.<span class="apidocCodeKeywordSpan">run</span>()` function.
+
+Also note that neither the node binary or the programs fully qualified path
+are specified.  These parameters are automatically calculated it not
+specified.  Refer to the `service.add()` function description for details
+about how this works.
+
+In the second approach a dedicated service management program can be
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.windows-service.stop" id="apidoc.element.windows-service.stop">
+        function <span class="apidocSignatureSpan">windows-service.</span>stop
+        <span class="apidocSignatureSpan">(rcode)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function stop(rcode) {
+	getServiceWrap ().stop (rcode);
+	process.exit (rcode);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+replaced with the `stdoutLogStream` parameter (this allows the redirection of
+all `console.log()` type calls to a service specific log file).  If the
+`stderrLogStream` parameter is not specified the programs `process.stderr`
+stream will be replaced with the `stdoutLogStream` parameter.  The `callback`
+function will be called when the service receives a stop request, e.g. because
+the Windows Service Controller was used to send a stop request to the service.
+
+The program should perform cleanup tasks and then call the `service.<span class="apidocCodeKeywordSpan">stop</span>()`
+function.
+
+The following example connects the calling program to the Windows Service
+Control Manager, it uses the same log stream for standard output and standard
+error:
+
+var logStream = fs.createWriteStream ("my-service.log");
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
